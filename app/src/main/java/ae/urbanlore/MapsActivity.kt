@@ -17,6 +17,8 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.material.snackbar.Snackbar
 import ae.urbanlore.databinding.ActivityMapsBinding
+import android.os.Handler
+import android.os.Looper
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
@@ -43,6 +45,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback{
         mapFragment.getMapAsync(this)
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
+
+
 
         binding.refresh.setOnClickListener{
             showLastKnownLocation()
@@ -116,6 +120,10 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback{
             ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED){
             showLastKnownLocation()
         }
+    }
+
+    private val locationUpdateHandler = object : Handler(Looper.getMainLooper()){
+
     }
 
 
