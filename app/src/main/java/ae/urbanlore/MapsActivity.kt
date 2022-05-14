@@ -54,6 +54,9 @@ class MapsActivity : AppCompatActivity() {
         mapController.setZoom(30.00)
 
 
+
+
+
         // Marks the position of the current user and zooms to it
         val mMyLocationOverlay = MyLocationNewOverlay(GpsMyLocationProvider(this), map)
         mMyLocationOverlay.disableMyLocation()
