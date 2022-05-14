@@ -25,6 +25,9 @@
             </intent-filter>
         </activity>
         <activity
+            android:name=".DetailsActivity"
+            android:exported="false" />
+        <activity
             android:name=".AddLoreActivity"
             android:exported="false" />
         <!--
