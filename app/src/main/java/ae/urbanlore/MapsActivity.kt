@@ -72,6 +72,13 @@ class MapsActivity : AppCompatActivity() {
         marker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
         map.overlays.add(marker)
 
+        marker.setOnMarkerClickListener(object: Marker.OnMarkerClickListener {
+            override fun onMarkerClick(marker: Marker?, mapView: MapView?): Boolean {
+                Log.d("DEBUG","click")
+            }
+
+        })
+
 
     }
 
