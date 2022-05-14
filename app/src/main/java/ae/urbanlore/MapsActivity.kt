@@ -50,34 +50,6 @@ class MapsActivity : AppCompatActivity() {
         map = binding.map
         map.setTileSource(TileSourceFactory.MAPNIK);
 
-        val marker = Marker(map)
-        val startPoint = GeoPoint(21, 73)
-        marker.position = startPoint
-        marker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
-        map.overlays.add(marker)
-
-
-
-        // Doesn't work yet
-/*
-        marker.setOnMarkerClickListener(object: Marker.OnMarkerClickListener {
-            override fun onMarkerClick(marker: Marker?, mapView: MapView?): Boolean {
-                Log.d("DEBUG", "click")
-
-                return true
-            }
-
-        })
-
- */
-
-        marker.setOnMarkerClickListener { marker, mapView ->
-            Log.d("DEBUG", "click")
-
-            true
-        }
-
-
         // Marks the position of the current user and zooms to it
         val mMyLocationOverlay = MyLocationNewOverlay(GpsMyLocationProvider(this), map)
         val mapController = map.controller
@@ -91,7 +63,24 @@ class MapsActivity : AppCompatActivity() {
                 mapController.setZoom(19.00)
             }
         }
-        map.overlays.add(mMyLocationOverlay) // adds a marker
+        map.overlays.add(mMyLocationOverlay)
+
+        // Random marker for testing
+        val marker = Marker(map)
+        val startPoint = GeoPoint(21, 73)
+        marker.position = startPoint
+        marker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
+        map.overlays.add(marker)
+
+
+
+        // Marker on click test
+        marker.setOnMarkerClickListener { marker, mapView ->
+            Log.d("DEBUG", "click")
+
+            true
+        }
+
 
 
     }
