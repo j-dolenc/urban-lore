@@ -26,6 +26,7 @@ import java.time.format.FormatStyle
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback{
 
     //test commit
+    // test branch commit
 
     private lateinit var mMap: GoogleMap
     private lateinit var binding: ActivityMapsBinding
