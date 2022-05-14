@@ -29,6 +29,7 @@ class AddLoreActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        supportActionBar?.hide()
         binding = ActivityAddLoreBinding.inflate(layoutInflater)
 
         listenerSetup()
