@@ -1,40 +1,23 @@
 package ae.urbanlore
-import android.Manifest
-import android.content.pm.PackageManager
-import android.location.Location
-import androidx.appcompat.app.AppCompatActivity
-import android.os.Bundle
-import android.util.Log
-import androidx.core.app.ActivityCompat
-import com.google.android.gms.location.FusedLocationProviderClient
-import com.google.android.gms.location.LocationServices
 
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.MarkerOptions
-import com.google.android.material.snackbar.Snackbar
+
 import ae.urbanlore.databinding.ActivityMapsBinding
-import android.content.SharedPreferences
-import android.content.res.Configuration
-import android.os.Handler
-import android.os.Looper
-import com.google.android.gms.maps.*
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
-import java.time.format.FormatStyle
-
+import android.content.pm.PackageManager
+import android.location.LocationManager
+import android.os.Bundle
 import android.preference.PreferenceManager
+import android.util.Log
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-
-
-
+import com.google.android.gms.maps.*
 import org.osmdroid.config.Configuration.*
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory
 import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.MapView
 import org.osmdroid.views.overlay.Marker
-
-
-import kotlin.collections.ArrayList
+import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider
+import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay
 
 
 class MapsActivity : AppCompatActivity() {
@@ -72,12 +55,37 @@ class MapsActivity : AppCompatActivity() {
         marker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
         map.overlays.add(marker)
 
+        // Doesn't work yet
+        /*
         marker.setOnMarkerClickListener(object: Marker.OnMarkerClickListener {
             override fun onMarkerClick(marker: Marker?, mapView: MapView?): Boolean {
                 Log.d("DEBUG","click")
+
+                return true
             }
 
         })
+        */
+
+
+
+
+        // Marks the position of the current user
+        val mMyLocationOverlay = MyLocationNewOverlay(GpsMyLocationProvider(this), map)
+        val mapController = map.controller
+        mMyLocationOverlay.disableMyLocation()
+        mMyLocationOverlay.disableFollowLocation()
+        mMyLocationOverlay.isDrawAccuracyEnabled = true
+        mMyLocationOverlay.runOnFirstFix {
+            runOnUiThread {
+                mapController.animateTo(mMyLocationOverlay.myLocation)
+                mapController.setZoom(18)
+            }
+        }
+        map.overlays.add(mMyLocationOverlay)
+
+
+
 
 
     }
