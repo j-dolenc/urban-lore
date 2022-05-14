@@ -9,143 +9,101 @@ import androidx.core.app.ActivityCompat
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 
-import com.google.android.gms.maps.CameraUpdateFactory
-import com.google.android.gms.maps.GoogleMap
-import com.google.android.gms.maps.OnMapReadyCallback
-import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.material.snackbar.Snackbar
 import ae.urbanlore.databinding.ActivityMapsBinding
 import android.os.Handler
 import android.os.Looper
+import com.google.android.gms.maps.*
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
 
-class MapsActivity : AppCompatActivity(), OnMapReadyCallback{
+import android.preference.PreferenceManager
 
-    //test commit
-    // test branch commit
 
-    private lateinit var mMap: GoogleMap
-    private lateinit var binding: ActivityMapsBinding
-    private lateinit var fusedLocationClient: FusedLocationProviderClient
+import org.osmdroid.config.Configuration.*
+import org.osmdroid.tileprovider.tilesource.TileSourceFactory
+import org.osmdroid.views.MapView
 
-    companion object{
-        private const val REQUEST_ID_LOCATION_PERMISSIONS = 8
-    }
+import java.util.ArrayList
 
+
+class MainActivity : AppCompatActivity() {
+    private val REQUEST_PERMISSIONS_REQUEST_CODE = 1;
+    private lateinit var map : MapView;
     override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+        super.onCreate(savedInstanceState);
 
-        binding = ActivityMapsBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+        //handle permissions first, before map is created. not depicted here
 
-        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
-        val mapFragment = supportFragmentManager
-            .findFragmentById(R.id.map) as SupportMapFragment
-        mapFragment.getMapAsync(this)
+        //load/initialize the osmdroid configuration, this can be done
+        // This won't work unless you have imported this: org.osmdroid.config.Configuration.*
+        getInstance().load(this, PreferenceManager.getDefaultSharedPreferences(this));
+        //setting this before the layout is inflated is a good idea
+        //it 'should' ensure that the map has a writable location for the map cache, even without permissions
+        //if no tiles are displayed, you can try overriding the cache path using Configuration.getInstance().setCachePath
+        //see also StorageUtils
+        //note, the load method also sets the HTTP User Agent to your application's package name, if you abuse osm's
+        //tile servers will get you banned based on this string.
 
-        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
+        //inflate and create the map
+        setContentView(R.layout.activity_maps);
 
-
-
-        binding.refresh.setOnClickListener{
-            showLastKnownLocation()
-        }
+        map = findViewById<MapView>(R.id.map)
+        map.setTileSource(TileSourceFactory.MAPNIK);
     }
 
-    fun showLastKnownLocation(){
-        if (ActivityCompat.checkSelfPermission(
-                this,
-                Manifest.permission.ACCESS_FINE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED || ActivityCompat.checkSelfPermission(
-                this,
-                Manifest.permission.ACCESS_COARSE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED
-        ){
-            Log.d("Debug", "What ios going on here")
-            if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission
-                    .ACCESS_COARSE_LOCATION) || ActivityCompat.shouldShowRequestPermissionRationale (this,
-                    Manifest.permission.ACCESS_FINE_LOCATION)) {
-                Log.d("Debug", "snekbar")
-                Snackbar.make(
-                    binding.root,
-                    R.string.permission_location_rationale,
-                    Snackbar.LENGTH_INDEFINITE
-                ).setAction(R.string.ok) {
-                    ActivityCompat.requestPermissions(
-                        this@MapsActivity, arrayOf(
-                            Manifest.permission.ACCESS_COARSE_LOCATION,
-                            Manifest.permission.ACCESS_FINE_LOCATION
-                        ),
-                        REQUEST_ID_LOCATION_PERMISSIONS
-                    )
-                }.show()
-            } else{
-                ActivityCompat.requestPermissions(
-                    this@MapsActivity, arrayOf(
-                        Manifest.permission.ACCESS_COARSE_LOCATION,
-                        Manifest.permission.ACCESS_FINE_LOCATION
-                    ),
-                    REQUEST_ID_LOCATION_PERMISSIONS
-                )
-            }
-        }else{
-            Log.d("DEBUG", "FUSED_LOCATIOn")
-            fusedLocationClient.lastLocation.addOnSuccessListener { location : Location? ->
-                if(location != null){
-                    mMap.addMarker(
-                        MarkerOptions()
-                            .position(LatLng(location.latitude, location.longitude))
-                            .title(
-                                LocalDateTime.now().format(
-                                    DateTimeFormatter.ofLocalizedDateTime(
-                                        FormatStyle.SHORT, FormatStyle.SHORT)))
-                    )
-                    val zoom_level = 15.0F
-                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(location.latitude, location.longitude), zoom_level))
-                    val long = "Longitude" + location.longitude.toString()
-                    val lat = "Latitude: " + location.latitude.toString()
-                    binding.longitude.text = long
-                    binding.latitude.text = lat
+    override fun onResume() {
+        super.onResume();
+        //this will refresh the osmdroid configuration on resuming.
+        //if you make changes to the configuration, use
+        //SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        //Configuration.getInstance().load(this, PreferenceManager.getDefaultSharedPreferences(this));
+        map.onResume(); //needed for compass, my location overlays, v6.0.0 and up
+    }
 
-                }
-            }
-        }
+    override fun onPause() {
+        super.onPause();
+        //this will refresh the osmdroid configuration on resuming.
+        //if you make changes to the configuration, use
+        //SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        //Configuration.getInstance().save(this, prefs);
+        map.onPause();  //needed for compass, my location overlays, v6.0.0 and up
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-
-        if(ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED ||
-            ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED){
-            showLastKnownLocation()
+        val permissionsToRequest = ArrayList<String>();
+        var i = 0;
+        while (i < grantResults.size) {
+            permissionsToRequest.add(permissions[i]);
+            i++;
+        }
+        if (permissionsToRequest.size > 0) {
+            ActivityCompat.requestPermissions(
+                this,
+                permissionsToRequest.toTypedArray(),
+                REQUEST_PERMISSIONS_REQUEST_CODE);
         }
     }
 
-    private val locationUpdateHandler = object : Handler(Looper.getMainLooper()){
 
+    /*private fun requestPermissionsIfNecessary(String[] permissions) {
+        ArrayList<String> permissionsToRequest = new ArrayList<>();
+        for (String permission : permissions) {
+        if (ContextCompat.checkSelfPermission(this, permission)
+                != PackageManager.PERMISSION_GRANTED) {
+            // Permission is not granted
+            permissionsToRequest.add(permission);
+        }
     }
-
-
-
-    /**
-     * Manipulates the map once available.
-     * This callback is triggered when the map is ready to be used.
-     * This is where we can add markers or lines, add listeners or move the camera. In this case,
-     * we just add a marker near Sydney, Australia.
-     * If Google Play services is not installed on the device, the user will be prompted to install
-     * it inside the SupportMapFragment. This method will only be triggered once the user has
-     * installed Google Play services and returned to the app.
-     */
-    override fun onMapReady(googleMap: GoogleMap) {
-        mMap = googleMap
-
-        // Add a marker in Sydney and move the camera
-        val sydney = LatLng(-34.0, 151.0)
-        mMap.addMarker(MarkerOptions().position(sydney).title("Marker in Sydney"))
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney))
-    }
+        if (permissionsToRequest.size() > 0) {
+            ActivityCompat.requestPermissions(
+                    this,
+                    permissionsToRequest.toArray(new String[0]),
+                    REQUEST_PERMISSIONS_REQUEST_CODE);
+        }
+    }*/
 }
