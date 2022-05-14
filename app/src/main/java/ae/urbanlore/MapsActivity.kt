@@ -31,9 +31,9 @@ class MapsActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMapsBinding
 
     private val MSG_UPDATE_TIME = 1
-    private val UPDATE_RATE_MS = 1000L
+    private val UPDATE_RATE_MS = 5000L
 
-    private val mapController = map.controller
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState);
@@ -50,37 +50,22 @@ class MapsActivity : AppCompatActivity() {
         //note, the load method also sets the HTTP User Agent to your application's package name, if you abuse osm's
         //tile servers will get you banned based on this string.
 
-        //inflate and create the map
+        supportActionBar?.hide() // Hides the action bar
 
+        //inflate and create the map
         binding = ActivityMapsBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         map = binding.map
         map.setTileSource(TileSourceFactory.MAPNIK);
 
-        //val mapController = map.controller
+        val mapController = map.controller
         mapController.setZoom(30.00)
+
+        showCurrentLocation()
 
 
         locationUpdateHandler.sendEmptyMessage(MSG_UPDATE_TIME)
-
-
-/*
-        // Marks the position of the current user and zooms to it
-        val mMyLocationOverlay = MyLocationNewOverlay(GpsMyLocationProvider(this), map)
-        mMyLocationOverlay.disableMyLocation()
-        mMyLocationOverlay.disableFollowLocation()
-        mMyLocationOverlay.isDrawAccuracyEnabled = true
-
-        mMyLocationOverlay.runOnFirstFix {
-            runOnUiThread {
-                mapController.animateTo(mMyLocationOverlay.myLocation)
-                mapController.setZoom(19.00)
-            }
-        }
-        map.overlays.add(mMyLocationOverlay)
-
- */
 
 
 
@@ -100,8 +85,23 @@ class MapsActivity : AppCompatActivity() {
             true
         }
 
+    }
 
+    fun showCurrentLocation() {
+        val mapController = map.controller
 
+        val mMyLocationOverlay = MyLocationNewOverlay(GpsMyLocationProvider(this@MapsActivity), map)
+        mMyLocationOverlay.disableMyLocation()
+        mMyLocationOverlay.disableFollowLocation()
+        mMyLocationOverlay.isDrawAccuracyEnabled = true
+
+        mMyLocationOverlay.runOnFirstFix {
+            runOnUiThread {
+                mapController.animateTo(mMyLocationOverlay.myLocation)
+                mapController.setZoom(19.00)
+            }
+        }
+        map.overlays.add(mMyLocationOverlay)
     }
 
     private val locationUpdateHandler = object : Handler(Looper.getMainLooper()){
@@ -109,24 +109,12 @@ class MapsActivity : AppCompatActivity() {
             if(MSG_UPDATE_TIME == msg.what){
                 Log.d("HANDLER", "Updating location...")
 
-                val mMyLocationOverlay = MyLocationNewOverlay(GpsMyLocationProvider(this@MapsActivity), map)
-                mMyLocationOverlay.disableMyLocation()
-                mMyLocationOverlay.disableFollowLocation()
-                mMyLocationOverlay.isDrawAccuracyEnabled = true
-
-                mMyLocationOverlay.runOnFirstFix {
-                    runOnUiThread {
-                        mapController.animateTo(mMyLocationOverlay.myLocation)
-                        mapController.setZoom(19.00)
-                    }
-                }
-                map.overlays.add(mMyLocationOverlay)
+                showCurrentLocation()
 
                 sendEmptyMessageDelayed(MSG_UPDATE_TIME, UPDATE_RATE_MS)
             }
         }
     }
-
 
 
 
