@@ -70,7 +70,7 @@ class MapsActivity : AppCompatActivity() {
 
 
 
-        // Marks the position of the current user
+        // Marks the position of the current user and zooms to it
         val mMyLocationOverlay = MyLocationNewOverlay(GpsMyLocationProvider(this), map)
         val mapController = map.controller
         mMyLocationOverlay.disableMyLocation()
@@ -79,7 +79,7 @@ class MapsActivity : AppCompatActivity() {
         mMyLocationOverlay.runOnFirstFix {
             runOnUiThread {
                 mapController.animateTo(mMyLocationOverlay.myLocation)
-                mapController.setZoom(18)
+                mapController.setZoom(19.00)
             }
         }
         map.overlays.add(mMyLocationOverlay)
