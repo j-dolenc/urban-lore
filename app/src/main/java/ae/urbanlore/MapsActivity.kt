@@ -13,6 +13,8 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.material.snackbar.Snackbar
 import ae.urbanlore.databinding.ActivityMapsBinding
+import android.content.SharedPreferences
+import android.content.res.Configuration
 import android.os.Handler
 import android.os.Looper
 import com.google.android.gms.maps.*
@@ -21,13 +23,18 @@ import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
 
 import android.preference.PreferenceManager
+import androidx.core.content.ContextCompat
+
 
 
 import org.osmdroid.config.Configuration.*
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory
+import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.MapView
+import org.osmdroid.views.overlay.Marker
 
-import java.util.ArrayList
+
+import kotlin.collections.ArrayList
 
 
 class MapsActivity : AppCompatActivity() {
@@ -58,6 +65,14 @@ class MapsActivity : AppCompatActivity() {
 
         map = binding.map
         map.setTileSource(TileSourceFactory.MAPNIK);
+
+        val marker = Marker(map)
+        val startPoint = GeoPoint(21, 73)
+        marker.position = startPoint
+        marker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
+        map.overlays.add(marker)
+
+
     }
 
     override fun onResume() {
@@ -94,21 +109,21 @@ class MapsActivity : AppCompatActivity() {
         }
     }
 
+    private fun requestPermissionsIfNecesarry(permissions: Array<String>) {
 
-    /*private fun requestPermissionsIfNecessary(String[] permissions) {
-        ArrayList<String> permissionsToRequest = new ArrayList<>();
-        for (String permission : permissions) {
-        if (ContextCompat.checkSelfPermission(this, permission)
-                != PackageManager.PERMISSION_GRANTED) {
-            // Permission is not granted
-            permissionsToRequest.add(permission);
+        val permissionsToRequest = ArrayList<String>()
+        for (permission in permissions) {
+            if (ContextCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED) {
+                // Permission is not granted
+                permissionsToRequest.add(permission);
+            }
         }
+
+        if (permissionsToRequest.size > 0) {
+            ActivityCompat.requestPermissions(this,
+                permissionsToRequest.toArray() as Array<out String>, REQUEST_PERMISSIONS_REQUEST_CODE)
+        }
+
     }
-        if (permissionsToRequest.size() > 0) {
-            ActivityCompat.requestPermissions(
-                    this,
-                    permissionsToRequest.toArray(new String[0]),
-                    REQUEST_PERMISSIONS_REQUEST_CODE);
-        }
-    }*/
+
 }
