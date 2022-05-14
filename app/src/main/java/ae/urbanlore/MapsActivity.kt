@@ -5,6 +5,9 @@ import ae.urbanlore.databinding.ActivityMapsBinding
 import android.content.pm.PackageManager
 import android.location.LocationManager
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
+import android.os.Message
 import android.preference.PreferenceManager
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
@@ -26,6 +29,11 @@ class MapsActivity : AppCompatActivity() {
     private lateinit var map : MapView;
 
     private lateinit var binding: ActivityMapsBinding
+
+    private val MSG_UPDATE_TIME = 1
+    private val UPDATE_RATE_MS = 1000L
+
+    private val mapController = map.controller
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState);
@@ -50,13 +58,14 @@ class MapsActivity : AppCompatActivity() {
         map = binding.map
         map.setTileSource(TileSourceFactory.MAPNIK);
 
-        val mapController = map.controller
+        //val mapController = map.controller
         mapController.setZoom(30.00)
 
 
+        locationUpdateHandler.sendEmptyMessage(MSG_UPDATE_TIME)
 
 
-
+/*
         // Marks the position of the current user and zooms to it
         val mMyLocationOverlay = MyLocationNewOverlay(GpsMyLocationProvider(this), map)
         mMyLocationOverlay.disableMyLocation()
@@ -70,6 +79,8 @@ class MapsActivity : AppCompatActivity() {
             }
         }
         map.overlays.add(mMyLocationOverlay)
+
+ */
 
 
 
@@ -91,6 +102,29 @@ class MapsActivity : AppCompatActivity() {
 
 
 
+    }
+
+    private val locationUpdateHandler = object : Handler(Looper.getMainLooper()){
+        override fun handleMessage(msg: Message) {
+            if(MSG_UPDATE_TIME == msg.what){
+                Log.d("HANDLER", "Updating location...")
+
+                val mMyLocationOverlay = MyLocationNewOverlay(GpsMyLocationProvider(this@MapsActivity), map)
+                mMyLocationOverlay.disableMyLocation()
+                mMyLocationOverlay.disableFollowLocation()
+                mMyLocationOverlay.isDrawAccuracyEnabled = true
+
+                mMyLocationOverlay.runOnFirstFix {
+                    runOnUiThread {
+                        mapController.animateTo(mMyLocationOverlay.myLocation)
+                        mapController.setZoom(19.00)
+                    }
+                }
+                map.overlays.add(mMyLocationOverlay)
+
+                sendEmptyMessageDelayed(MSG_UPDATE_TIME, UPDATE_RATE_MS)
+            }
+        }
     }
 
 
