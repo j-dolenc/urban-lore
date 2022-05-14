@@ -18,6 +18,7 @@ import org.osmdroid.views.MapView
 import org.osmdroid.views.overlay.Marker
 import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay
+import java.util.jar.Manifest
 
 
 class MapsActivity : AppCompatActivity() {
@@ -55,19 +56,26 @@ class MapsActivity : AppCompatActivity() {
         marker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
         map.overlays.add(marker)
 
+
+
         // Doesn't work yet
-        /*
+/*
         marker.setOnMarkerClickListener(object: Marker.OnMarkerClickListener {
             override fun onMarkerClick(marker: Marker?, mapView: MapView?): Boolean {
-                Log.d("DEBUG","click")
+                Log.d("DEBUG", "click")
 
                 return true
             }
 
         })
-        */
 
+ */
 
+        marker.setOnMarkerClickListener { marker, mapView ->
+            Log.d("DEBUG", "click")
+
+            true
+        }
 
 
         // Marks the position of the current user and zooms to it
@@ -76,19 +84,20 @@ class MapsActivity : AppCompatActivity() {
         mMyLocationOverlay.disableMyLocation()
         mMyLocationOverlay.disableFollowLocation()
         mMyLocationOverlay.isDrawAccuracyEnabled = true
+
         mMyLocationOverlay.runOnFirstFix {
             runOnUiThread {
                 mapController.animateTo(mMyLocationOverlay.myLocation)
                 mapController.setZoom(19.00)
             }
         }
-        map.overlays.add(mMyLocationOverlay)
-
-
-
+        map.overlays.add(mMyLocationOverlay) // adds a marker
 
 
     }
+
+
+
 
     override fun onResume() {
         super.onResume();
