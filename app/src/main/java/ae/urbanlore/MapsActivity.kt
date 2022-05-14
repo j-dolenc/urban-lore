@@ -59,8 +59,8 @@ class MapsActivity : AppCompatActivity() {
         map = binding.map
         map.setTileSource(TileSourceFactory.MAPNIK);
 
-        val mapController = map.controller
-        mapController.setZoom(30.00)
+        //val mapController = map.controller
+        //mapController.setZoom(30.00)
 
         showCurrentLocation()
 
