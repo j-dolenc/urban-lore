@@ -4,11 +4,18 @@ import ae.urbanlore.databinding.ActivityAddLoreBinding
 import android.app.Activity
 import android.content.Intent
 import android.graphics.Bitmap
+import android.location.Location
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.MediaStore
+import android.util.Base64
+import android.util.Log
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.graphics.drawable.toBitmap
+import com.parse.ParseGeoPoint
 import com.parse.ParseObject
+import com.parse.Parse
+import java.io.ByteArrayOutputStream
 
 class AddLoreActivity : AppCompatActivity() {
     private lateinit var binding :ActivityAddLoreBinding
@@ -39,6 +46,28 @@ class AddLoreActivity : AppCompatActivity() {
             val toBase = ParseObject("lore")
             toBase.put("name", binding.title.text.toString())
             toBase.put("description", binding.description.text.toString())
+
+            val lat = intent.getStringExtra("LAT")
+            val long = intent.getStringExtra("LONG")
+            if(lat != null && long != null){
+                toBase.put("latitude", lat)
+                toBase.put("longitude", long)
+            }
+            val drawable = binding.photoHolder.drawable
+
+            val bitMap:Bitmap = drawable.toBitmap()
+            val byteStream = ByteArrayOutputStream()
+            bitMap.compress(Bitmap.CompressFormat.JPEG,100,byteStream)
+            val byteArr = byteStream.toByteArray()
+            val imgString = Base64.encodeToString(byteArr, Base64.NO_WRAP)
+            toBase.put("stringPicture", imgString)
+            toBase.saveInBackground {
+                if (it != null) {
+                    it.localizedMessage?.let { message -> Log.e("MainActivity", message) }
+                } else {
+                    Log.d("MainActivity", "Object saved.")
+                }
+            }
             finish()
         }
     }

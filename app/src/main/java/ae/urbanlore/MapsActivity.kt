@@ -18,12 +18,17 @@ import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.material.snackbar.Snackbar
 import ae.urbanlore.databinding.ActivityMapsBinding
 import android.content.Intent
+import android.graphics.BitmapFactory
 import android.os.Handler
 import android.os.Looper
 import android.os.Message
+import androidx.appcompat.app.AlertDialog
+import com.parse.ParseObject
+import com.parse.ParseQuery
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
+import java.util.*
 
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback{
 
@@ -32,6 +37,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback{
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     var latG = ""
     var longG = ""
+    var dataList = ArrayList<String>()
+    var myArray = arrayOf<String>()
 
     companion object{
         private const val REQUEST_ID_LOCATION_PERMISSIONS = 8
@@ -116,8 +123,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback{
                     mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(location.latitude, location.longitude), zoom_level))
                     val long = "Longitude" + location.longitude.toString()
                     val lat = "Latitude: " + location.latitude.toString()
-                    longG = long
-                    latG = lat
+                    longG = location.longitude.toString()
+                    latG = location.latitude.toString()
                     Log.d("DEBUG", "NEW LOCATION: " + long + " " + lat)
                     /*binding.longitude.text = long
                     binding.latitude.text = lat*/
@@ -159,6 +166,32 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback{
      * installed Google Play services and returned to the app.
      */
     override fun onMapReady(googleMap: GoogleMap) {
+        val query: ParseQuery<ParseObject> = ParseQuery.getQuery("lore")
+        query.findInBackground { objects, e ->
+            if (e == null) {
+                for (obj in objects) {
+
+                    val long: String? = obj?.getString("longitude")
+
+                    val lat: String? = obj?.getString("latitude")
+                    if (long!=null && lat != null){
+                        val sydney = LatLng(lat.toDouble(), long.toDouble())
+                        mMap.addMarker(MarkerOptions().position(sydney).title("Marker in Sydney"))
+                        //dataList.add(element)
+                    }
+                }
+            }
+
+            myArray = dataList.toTypedArray()
+
+
+            Log.d("DEBUG",myArray.toString())
+
+        }
+        //val decoded = Base64.getDecoder().decode(memos[position].imgView)
+
+        //val img = BitmapFactory.decodeByteArray( decoded,0, decoded.size)
+        //itemImage.setImageBitmap(img)
         mMap = googleMap
 
         // Add a marker in Sydney and move the camera
