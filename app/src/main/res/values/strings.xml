@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">Urban Lore</string>
+    <string name="title_activity_maps">MapsActivity</string>
+    <string name="permission_location_rationale">I rly wanna use ur location not to track u or anything :3</string>
+    <string name="ok">Grant permission</string>
+    <string name="latitude">Latitude: </string>
+    <string name="longitude">Longitude: </string>
+    <string name="refresh">Refresh</string>
+
+</resources>
