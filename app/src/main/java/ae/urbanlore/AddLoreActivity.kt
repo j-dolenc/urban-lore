@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.MediaStore
 import androidx.activity.result.contract.ActivityResultContracts
+import com.parse.ParseObject
 
 class AddLoreActivity : AppCompatActivity() {
     private lateinit var binding :ActivityAddLoreBinding
@@ -35,6 +36,9 @@ class AddLoreActivity : AppCompatActivity() {
         }
 
         binding.post.setOnClickListener{
+            val toBase = ParseObject("lore")
+            toBase.put("name", binding.title.text.toString())
+            toBase.put("description", binding.description.text.toString())
             finish()
         }
     }

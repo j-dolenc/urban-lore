@@ -30,6 +30,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback{
     private lateinit var mMap: GoogleMap
     private lateinit var binding: ActivityMapsBinding
     private lateinit var fusedLocationClient: FusedLocationProviderClient
+    var latG = ""
+    var longG = ""
 
     companion object{
         private const val REQUEST_ID_LOCATION_PERMISSIONS = 8
@@ -54,6 +56,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback{
 
         binding.add.setOnClickListener{
             val intent = Intent(applicationContext, AddLoreActivity::class.java)
+            intent.putExtra("LAT", latG)
+            intent.putExtra("LONG", longG)
             startActivity(intent)
         }
 
@@ -112,6 +116,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback{
                     mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(location.latitude, location.longitude), zoom_level))
                     val long = "Longitude" + location.longitude.toString()
                     val lat = "Latitude: " + location.latitude.toString()
+                    longG = long
+                    latG = lat
                     Log.d("DEBUG", "NEW LOCATION: " + long + " " + lat)
                     /*binding.longitude.text = long
                     binding.latitude.text = lat*/
