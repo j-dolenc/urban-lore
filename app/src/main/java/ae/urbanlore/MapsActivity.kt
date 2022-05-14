@@ -30,9 +30,12 @@ import org.osmdroid.views.MapView
 import java.util.ArrayList
 
 
-class MainActivity : AppCompatActivity() {
+class MapsActivity : AppCompatActivity() {
     private val REQUEST_PERMISSIONS_REQUEST_CODE = 1;
     private lateinit var map : MapView;
+
+    private lateinit var binding: ActivityMapsBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState);
 
@@ -49,9 +52,11 @@ class MainActivity : AppCompatActivity() {
         //tile servers will get you banned based on this string.
 
         //inflate and create the map
-        setContentView(R.layout.activity_maps);
 
-        map = findViewById<MapView>(R.id.map)
+        binding = ActivityMapsBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
+        map = binding.map
         map.setTileSource(TileSourceFactory.MAPNIK);
     }
 
