@@ -23,6 +23,7 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.material.snackbar.Snackbar
 import com.parse.ParseObject
@@ -32,7 +33,7 @@ import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
 import java.util.*
 
-class MapsActivity : AppCompatActivity(), OnMapReadyCallback, LocationListener{
+class MapsActivity : AppCompatActivity(), OnMapReadyCallback, LocationListener, GoogleMap.OnMarkerClickListener{
 
     private lateinit var mMap: GoogleMap
     private lateinit var binding: ActivityMapsBinding
@@ -70,15 +71,20 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, LocationListener{
             startActivity(intent)
         }
 
+        binding.center.setOnClickListener{
+            showLastKnownLocation(true)
+        }
+        showLastKnownLocation(true)
         val locationRequest = LocationRequest()
         locationRequest.interval = 10
         locationRequest.fastestInterval = 15 * 1000
         locationRequest.priority = LocationRequest.PRIORITY_HIGH_ACCURACY
 
-        //locationUpdateHandler.sendEmptyMessage(MSG_UPDATE_TIME)
+        locationUpdateHandler.sendEmptyMessage(MSG_UPDATE_TIME)
+
     }
 
-    fun showLastKnownLocation(){
+    fun showLastKnownLocation(move:Boolean){
         if (ActivityCompat.checkSelfPermission(
                 this,
                 Manifest.permission.ACCESS_FINE_LOCATION
@@ -127,7 +133,10 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, LocationListener{
                                         FormatStyle.SHORT, FormatStyle.SHORT)))
                     )
                     val zoom_level = 15.0F
-                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(location.latitude, location.longitude), zoom_level))
+
+                    if(move){
+                        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(location.latitude, location.longitude), zoom_level))
+                    }
                     val long = "Longitude" + location.longitude.toString()
                     val lat = "Latitude: " + location.latitude.toString()
                     longG = location.longitude.toString()
@@ -145,7 +154,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, LocationListener{
 
         if(ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED ||
             ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED){
-            showLastKnownLocation()
+            showLastKnownLocation(true)
         }
     }
 
@@ -154,7 +163,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, LocationListener{
             if(MSG_UPDATE_TIME == msg.what){
                 Log.d("HANDLER", "Updating location...")
 
-                showLastKnownLocation()
+                showLastKnownLocation(false)
 
                 sendEmptyMessageDelayed(MSG_UPDATE_TIME, UPDATE_RATE_MS)
             }
@@ -175,6 +184,14 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, LocationListener{
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
         addMarkersFromDB()
+
+        mMap.setOnMarkerClickListener { it ->
+            it.snippet?.let { Log.d("CLICK", it) }
+            val intent = Intent(applicationContext,DetailsActivity::class.java)
+            intent.putExtra("ID", it.snippet)
+            startActivity(intent)
+            true
+        }
         //val decoded = Base64.getDecoder().decode(memos[position].imgView)
         //val img = BitmapFactory.decodeByteArray( decoded,0, decoded.size)
         //itemImage.setImageBitmap(img)
@@ -257,5 +274,15 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, LocationListener{
 
     override fun onLocationChanged(p0: Location) {
         TODO("Not yet implemented")
+    }
+
+
+
+    override fun onMarkerClick(marker: Marker): Boolean {
+        marker.snippet?.let { Log.d("CLICK", it) }
+        val intent = Intent(applicationContext,DetailsActivity::class.java)
+        intent.putExtra("ID", marker.snippet)
+        startActivity(intent)
+        return true
     }
 }
