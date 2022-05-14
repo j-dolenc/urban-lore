@@ -1,14 +1,23 @@
 package ae.urbanlore
+
+import ae.urbanlore.databinding.ActivityMapsBinding
 import android.Manifest
+import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.location.Location
-import androidx.appcompat.app.AppCompatActivity
+import android.location.LocationListener
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
+import android.os.Message
 import android.util.Log
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationServices
-
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
@@ -16,13 +25,6 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.material.snackbar.Snackbar
-import ae.urbanlore.databinding.ActivityMapsBinding
-import android.content.Intent
-import android.graphics.BitmapFactory
-import android.os.Handler
-import android.os.Looper
-import android.os.Message
-import androidx.appcompat.app.AlertDialog
 import com.parse.ParseObject
 import com.parse.ParseQuery
 import java.time.LocalDateTime
@@ -30,7 +32,7 @@ import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
 import java.util.*
 
-class MapsActivity : AppCompatActivity(), OnMapReadyCallback{
+class MapsActivity : AppCompatActivity(), OnMapReadyCallback, LocationListener{
 
     private lateinit var mMap: GoogleMap
     private lateinit var binding: ActivityMapsBinding
@@ -68,7 +70,12 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback{
             startActivity(intent)
         }
 
-        locationUpdateHandler.sendEmptyMessage(MSG_UPDATE_TIME)
+        val locationRequest = LocationRequest()
+        locationRequest.interval = 10
+        locationRequest.fastestInterval = 15 * 1000
+        locationRequest.priority = LocationRequest.PRIORITY_HIGH_ACCURACY
+
+        //locationUpdateHandler.sendEmptyMessage(MSG_UPDATE_TIME)
     }
 
     fun showLastKnownLocation(){
@@ -166,17 +173,75 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback{
      * installed Google Play services and returned to the app.
      */
     override fun onMapReady(googleMap: GoogleMap) {
+        mMap = googleMap
+        addMarkersFromDB()
+        //val decoded = Base64.getDecoder().decode(memos[position].imgView)
+        //val img = BitmapFactory.decodeByteArray( decoded,0, decoded.size)
+        //itemImage.setImageBitmap(img)
+        // Add a marker in Sydney and move the camera
+        val sydney = LatLng(-34.0, 151.0)
+        mMap.addMarker(MarkerOptions().position(sydney).title("Marker in Sydney"))
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney))
+    }
+
+
+    fun getMarkerInfo(markerId:String):MutableMap<String,String>{
+        val res = mutableMapOf("title" to "test", "description" to "test", "imgString" to "test")
+        val query: ParseQuery<ParseObject> = ParseQuery.getQuery("lore")
+        query.whereEqualTo("objectId", markerId);
+        query.getFirstInBackground { obj, e ->
+            if (e == null) {
+
+                val long: String? = obj?.getString("longitude")
+                val lat: String? = obj?.getString("latitude")
+                val title: String? = obj?.getString("name")
+                val description: String? = obj?.getString("description")
+                val imgString: String? = obj?.getString("stringPicture");
+
+                if (long!=null && lat != null && title != null && description != null && imgString != null){
+                    //TODO: naredi kar hoces z info o enem eventu
+                    res["title"] = title
+                    res["description"] = description
+                    res["imgString"] = imgString
+                    //val decoded = Base64.getDecoder().decode(imgString)
+                    //val img = BitmapFactory.decodeByteArray( decoded,0, decoded.size)
+                    //itemImage.setImageBitmap(img)
+
+                }
+
+            }
+
+            myArray = dataList.toTypedArray()
+
+
+            Log.d("DEBUG",myArray.toString())
+
+        }
+        return res
+    }
+
+    fun decodeImg(stringImg: String): Bitmap {
+        val decoded = Base64.getDecoder().decode(stringImg)
+
+        return BitmapFactory.decodeByteArray(decoded, 0, decoded.size)
+    }
+
+    fun addMarkersFromDB(){
+
         val query: ParseQuery<ParseObject> = ParseQuery.getQuery("lore")
         query.findInBackground { objects, e ->
             if (e == null) {
                 for (obj in objects) {
 
                     val long: String? = obj?.getString("longitude")
-
                     val lat: String? = obj?.getString("latitude")
+                    val title: String? = obj?.getString("name")
+                    val markId: String? = obj?.getString("objectId")
+
                     if (long!=null && lat != null){
                         val sydney = LatLng(lat.toDouble(), long.toDouble())
-                        mMap.addMarker(MarkerOptions().position(sydney).title("Marker in Sydney"))
+                        mMap.addMarker(MarkerOptions().position(sydney).title(title))?.snippet =
+                            markId
                         //dataList.add(element)
                     }
                 }
@@ -188,15 +253,9 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback{
             Log.d("DEBUG",myArray.toString())
 
         }
-        //val decoded = Base64.getDecoder().decode(memos[position].imgView)
+    }
 
-        //val img = BitmapFactory.decodeByteArray( decoded,0, decoded.size)
-        //itemImage.setImageBitmap(img)
-        mMap = googleMap
-
-        // Add a marker in Sydney and move the camera
-        val sydney = LatLng(-34.0, 151.0)
-        mMap.addMarker(MarkerOptions().position(sydney).title("Marker in Sydney"))
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney))
+    override fun onLocationChanged(p0: Location) {
+        TODO("Not yet implemented")
     }
 }
