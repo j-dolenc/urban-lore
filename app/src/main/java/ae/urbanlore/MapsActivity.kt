@@ -17,8 +17,10 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.material.snackbar.Snackbar
 import ae.urbanlore.databinding.ActivityMapsBinding
+import android.content.Intent
 import android.os.Handler
 import android.os.Looper
+import android.os.Message
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
@@ -31,6 +33,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback{
 
     companion object{
         private const val REQUEST_ID_LOCATION_PERMISSIONS = 8
+        private const val MSG_UPDATE_TIME = 1
+        private const val UPDATE_RATE_MS = 1000L
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -48,9 +52,12 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback{
 
 
 
-        binding.refresh.setOnClickListener{
-            showLastKnownLocation()
+        binding.add.setOnClickListener{
+            val intent = Intent(applicationContext, AddLoreActivity::class.java)
+            startActivity(intent)
         }
+
+        locationUpdateHandler.sendEmptyMessage(MSG_UPDATE_TIME)
     }
 
     fun showLastKnownLocation(){
@@ -90,7 +97,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback{
                 )
             }
         }else{
-            Log.d("DEBUG", "FUSED_LOCATIOn")
+
             fusedLocationClient.lastLocation.addOnSuccessListener { location : Location? ->
                 if(location != null){
                     mMap.addMarker(
@@ -105,9 +112,9 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback{
                     mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(location.latitude, location.longitude), zoom_level))
                     val long = "Longitude" + location.longitude.toString()
                     val lat = "Latitude: " + location.latitude.toString()
-                    binding.longitude.text = long
-                    binding.latitude.text = lat
-
+                    Log.d("DEBUG", "NEW LOCATION: " + long + " " + lat)
+                    /*binding.longitude.text = long
+                    binding.latitude.text = lat*/
                 }
             }
         }
@@ -123,7 +130,15 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback{
     }
 
     private val locationUpdateHandler = object : Handler(Looper.getMainLooper()){
+        override fun handleMessage(msg: Message) {
+            if(MSG_UPDATE_TIME == msg.what){
+                Log.d("HANDLER", "Updating location...")
 
+                showLastKnownLocation()
+
+                sendEmptyMessageDelayed(MSG_UPDATE_TIME, UPDATE_RATE_MS)
+            }
+        }
     }
 
 

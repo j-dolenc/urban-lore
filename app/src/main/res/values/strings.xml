@@ -6,5 +6,7 @@
     <string name="latitude">Latitude: </string>
     <string name="longitude">Longitude: </string>
     <string name="refresh">Refresh</string>
+    <string name="take_photo">Take photo</string>
+    <string name="post">Post</string>
 
 </resources>
