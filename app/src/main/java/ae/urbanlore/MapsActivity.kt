@@ -50,9 +50,12 @@ class MapsActivity : AppCompatActivity() {
         map = binding.map
         map.setTileSource(TileSourceFactory.MAPNIK);
 
+        val mapController = map.controller
+        mapController.setZoom(30.00)
+
+
         // Marks the position of the current user and zooms to it
         val mMyLocationOverlay = MyLocationNewOverlay(GpsMyLocationProvider(this), map)
-        val mapController = map.controller
         mMyLocationOverlay.disableMyLocation()
         mMyLocationOverlay.disableFollowLocation()
         mMyLocationOverlay.isDrawAccuracyEnabled = true
@@ -64,6 +67,8 @@ class MapsActivity : AppCompatActivity() {
             }
         }
         map.overlays.add(mMyLocationOverlay)
+
+
 
         // Random marker for testing
         val marker = Marker(map)
