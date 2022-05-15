@@ -23,11 +23,13 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.MapStyleOptions
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.material.snackbar.Snackbar
 import com.parse.ParseObject
 import com.parse.ParseQuery
+import java.lang.Exception
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
@@ -188,6 +190,21 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, LocationListener, 
      * installed Google Play services and returned to the app.
      */
     override fun onMapReady(googleMap: GoogleMap) {
+
+        try {
+            // Customise the styling of the base map using a JSON object defined
+            // in a raw resource file.
+            var success = googleMap.setMapStyle(
+                    MapStyleOptions.loadRawResourceStyle(
+                        this, R.raw.style_json));
+
+            if (!success) {
+                Log.e("MAPSTYLE", "Style parsing failed.");
+            }
+        } catch (e: Exception) {
+            Log.e("MAPSTYLE", "Can't find style. Error: $e");
+        }
+
         mMap = googleMap
         addMarkersFromDB()
 
