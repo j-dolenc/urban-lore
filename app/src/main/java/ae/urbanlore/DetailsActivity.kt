@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.WindowManager
 import android.widget.Toast
+import androidx.core.graphics.drawable.toDrawable
 import com.parse.ParseObject
 import com.parse.ParseQuery
 import java.util.*
@@ -56,10 +57,13 @@ class DetailsActivity : AppCompatActivity() {
                     if(!upVoted){
                         upVoted = true
                         votes1++
+                        //binding.upvote.setBackgroundResource(R.drawable.upvote_fill)
+                        binding.upvote.setImageResource(R.drawable.upvote_fill)
                     }
                     else{
                         upVoted = false
                         votes1--
+                        binding.upvote.setImageResource(R.drawable.upvote)
                     }
 //                    if(up){
 //

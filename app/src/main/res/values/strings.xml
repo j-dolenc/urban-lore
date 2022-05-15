@@ -13,5 +13,6 @@
 
     <string name="back4app_app_id">MCmMIZYx160q0ndb3abSV4aNghCRh2hEWgMGpyUd</string>
     <string name="back4app_client_key">6RqoNBoHZMDPH5sFemYtBXOTssP6xozIh3P5tjYi</string>
+    <string name="upvotesTxt">Upvotes:</string>
 
 </resources>

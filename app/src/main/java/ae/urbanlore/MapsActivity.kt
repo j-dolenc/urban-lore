@@ -63,7 +63,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, LocationListener, 
             WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
             WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
         );
-
          */
 
         // Translucent status bar, visible action bar
