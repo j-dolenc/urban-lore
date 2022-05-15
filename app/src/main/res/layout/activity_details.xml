@@ -45,37 +45,37 @@
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/votes"
-        app:layout_constraintVertical_bias="0.161" />
+        app:layout_constraintVertical_bias="0.058" />
 
     <ImageButton
         android:id="@+id/upvote"
         android:layout_width="120dp"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="20dp"
+        android:layout_marginEnd="40dp"
         android:backgroundTint="@android:color/transparent"
         android:src="@drawable/upvote"
         android:text="UPVOTE"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.869"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/description"
-        app:layout_constraintVertical_bias="0.502" />
+        app:layout_constraintVertical_bias="0.196" />
 
     <ImageButton
         android:id="@+id/back"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
+        android:layout_marginStart="37dp"
         android:backgroundTint="@android:color/transparent"
         android:src="@drawable/back"
         android:text="BACK"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.183"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/description"
-        app:layout_constraintVertical_bias="0.502" />
+        app:layout_constraintVertical_bias="0.196" />
 
     <TextView
         android:id="@+id/votes"
@@ -89,7 +89,7 @@
         app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/upvotes_txt"
-        app:layout_constraintVertical_bias="0.036" />
+        app:layout_constraintVertical_bias="0.0" />
 
     <TextView
         android:id="@+id/upvotes_txt"
@@ -102,14 +102,21 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/title"
-        app:layout_constraintVertical_bias="0.127" />
+        app:layout_constraintVertical_bias="0.094" />
 
-    <Button
+    <ImageButton
+        android:id="@+id/ar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/ar"
+        android:backgroundTint="@android:color/transparent"
+        android:gravity="center"
+        android:src="@drawable/armode"
+        android:text="AR MODE"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:text="AR MODE"/>
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/upvote"
+        app:layout_constraintVertical_bias="0.0" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
