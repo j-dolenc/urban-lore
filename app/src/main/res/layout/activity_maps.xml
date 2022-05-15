@@ -18,31 +18,56 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:context=".MapsActivity" />
 
+    <!--    <ImageButton-->
+    <!--        android:id="@+id/center"-->
+    <!--        android:layout_width="0dp"-->
+    <!--        android:layout_height="0dp"-->
+    <!--        android:layout_marginStart="37dp"-->
+    <!--        android:layout_marginEnd="173dp"-->
+    <!--        android:backgroundTint="@android:color/transparent"-->
+    <!--        app:tint="@android:color/darker_gray"-->
+    <!--        app:layout_constraintBottom_toBottomOf="@+id/add"-->
+    <!--        app:layout_constraintEnd_toStartOf="@+id/add"-->
+    <!--        app:layout_constraintStart_toStartOf="parent"-->
+    <!--        app:layout_constraintTop_toTopOf="@+id/add"-->
+    <!--        app:srcCompat="@drawable/locate_me" />-->
+
+    <!--    <ImageButton-->
+    <!--        android:id="@+id/add"-->
+    <!--        android:layout_width="wrap_content"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:layout_marginEnd="32dp"-->
+    <!--        android:layout_marginBottom="44dp"-->
+    <!--        android:backgroundTint="@android:color/transparent"-->
+    <!--        app:tint="@android:color/darker_gray"-->
+    <!--        app:layout_constraintBottom_toBottomOf="parent"-->
+    <!--        app:layout_constraintEnd_toEndOf="parent"-->
+    <!--        app:layout_constraintStart_toEndOf="@+id/center"-->
+    <!--        app:srcCompat="@drawable/add_mark" />-->
+
     <ImageButton
         android:id="@+id/center"
         android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginStart="37dp"
-        android:layout_marginEnd="173dp"
+        android:layout_height="113dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="130dp"
+        android:layout_marginBottom="35dp"
         android:backgroundTint="@android:color/transparent"
-        app:tint="@android:color/darker_gray"
-        app:layout_constraintBottom_toBottomOf="@+id/add"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/add"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/add"
-        app:srcCompat="@drawable/locate_me" />
+        app:srcCompat="@drawable/kompas" />
 
     <ImageButton
         android:id="@+id/add"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="32dp"
-        android:layout_marginBottom="44dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="29dp"
         android:backgroundTint="@android:color/transparent"
-        app:tint="@android:color/darker_gray"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/center"
-        app:srcCompat="@drawable/add_mark" />
+        app:srcCompat="@drawable/markerr" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
