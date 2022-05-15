@@ -1,7 +1,7 @@
 package ae.urbanlore
 
 import ae.urbanlore.databinding.ActivityDetailsBinding
-import android.graphics.BitmapFactory
+import android.graphics.*
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -170,7 +170,12 @@ class DetailsActivity : AppCompatActivity() {
                     binding.description.text = res["description"].toString()
                     val decoded = getDecoder().decode(res["imgString"].toString())
                     val img = BitmapFactory.decodeByteArray( decoded,0, decoded.size)
-                    binding.image.setImageBitmap(img)
+                    img.apply {
+                        binding.image.setImageBitmap(this)
+                        // create rounded corners bitmap
+                        binding.image.setImageBitmap(toRoundedCorners(8F))
+
+                    }
                     binding.votes.text=votes.toString()
                 }
 
@@ -178,6 +183,31 @@ class DetailsActivity : AppCompatActivity() {
 
         }
         return res
+    }
+    fun Bitmap.toRoundedCorners(
+        cornerRadius: Float = 25F
+    ):Bitmap?{
+        val bitmap = Bitmap.createBitmap(
+            width, // width in pixels
+            height, // height in pixels
+            Bitmap.Config.ARGB_8888
+        )
+        val canvas = Canvas(bitmap)
+
+        // path to draw rounded corners bitmap
+        val path = Path().apply {
+            addRoundRect(
+                RectF(0f,0f,width.toFloat(),height.toFloat()),
+                cornerRadius,
+                cornerRadius,
+                Path.Direction.CCW
+            )
+        }
+        canvas.clipPath(path)
+
+        // draw the rounded corners bitmap on canvas
+        canvas.drawBitmap(this,0f,0f,null)
+        return bitmap
     }
 
 }

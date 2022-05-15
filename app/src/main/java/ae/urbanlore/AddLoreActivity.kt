@@ -4,6 +4,9 @@ import ae.urbanlore.databinding.ActivityAddLoreBinding
 import android.app.Activity
 import android.content.Intent
 import android.graphics.Bitmap
+import android.graphics.Canvas
+import android.graphics.Path
+import android.graphics.RectF
 import android.location.Location
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -87,6 +90,37 @@ class AddLoreActivity : AppCompatActivity() {
 
     fun camImg(intent: Intent?){
         val imgBitmap = intent?.extras?.get("data") as Bitmap
-        binding.photoHolder.setImageBitmap(imgBitmap)
+        imgBitmap.apply {
+            binding.photoHolder.setImageBitmap(this)
+            // create rounded corners bitmap
+            binding.photoHolder.setImageBitmap(toRoundedCorners(8F))
+
+        }
+
+    }
+    fun Bitmap.toRoundedCorners(
+        cornerRadius: Float = 25F
+    ):Bitmap?{
+        val bitmap = Bitmap.createBitmap(
+            width, // width in pixels
+            height, // height in pixels
+            Bitmap.Config.ARGB_8888
+        )
+        val canvas = Canvas(bitmap)
+
+        // path to draw rounded corners bitmap
+        val path = Path().apply {
+            addRoundRect(
+                RectF(0f,0f,width.toFloat(),height.toFloat()),
+                cornerRadius,
+                cornerRadius,
+                Path.Direction.CCW
+            )
+        }
+        canvas.clipPath(path)
+
+        // draw the rounded corners bitmap on canvas
+        canvas.drawBitmap(this,0f,0f,null)
+        return bitmap
     }
 }
