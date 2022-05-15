@@ -7,10 +7,50 @@
     tools:context=".SplashActivity">
 
     <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="SPLASH SCREEN TEMP"
+        android:id="@+id/textView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:gravity="center"
-        />
+        android:text="U R B A N  L O R E"
+        android:textSize="32dp"
+        android:typeface="monospace"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="115dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="139dp"
+        android:layout_marginEnd="148dp"
+        android:layout_marginBottom="151dp"
+        app:layout_constraintBottom_toTopOf="@+id/imageView3"
+        app:layout_constraintEnd_toEndOf="@+id/imageView4"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/country" />
+
+    <ImageView
+        android:id="@+id/imageView3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="24dp"
+        android:layout_marginBottom="234dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/imageView4"
+        app:layout_constraintTop_toBottomOf="@+id/imageView"
+        app:srcCompat="@drawable/kompas" />
+
+    <ImageView
+        android:id="@+id/imageView4"
+        android:layout_width="115dp"
+        android:layout_height="124dp"
+        android:layout_marginTop="116dp"
+        android:layout_marginEnd="72dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/imageView"
+        app:srcCompat="@drawable/svet" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
