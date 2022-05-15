@@ -157,6 +157,9 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, LocationListener, 
                                     DateTimeFormatter.ofLocalizedDateTime(
                                         FormatStyle.SHORT, FormatStyle.SHORT)))
                     )
+                    locMarker!!.snippet = "-1"
+                    val icon:BitmapDescriptor = BitmapDescriptorFactory.fromResource(R.drawable.pajac)
+                    locMarker!!.setIcon(icon)
                     val zoom_level = 15.0F
 
                     if(move){
@@ -228,12 +231,14 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, LocationListener, 
         mMap.setOnMarkerClickListener { it ->
             it.snippet?.let { Log.d("CLICK", it) }
             val result = distanceP(it)
-            if(result < 1000){
+            if(it.snippet == "-1"){
+                Toast.makeText(application, "You cannot click on yourself! :P", Toast.LENGTH_SHORT).show()
+            }
+            else if(result < 1000){
                 val intent = Intent(applicationContext,DetailsActivity::class.java)
                 intent.putExtra("ID", it.snippet)
                 startActivity(intent)
-            }
-            else{
+            } else{
                 Toast.makeText(application, "You are too far away from the marker!", Toast.LENGTH_SHORT).show()
             }
             true
