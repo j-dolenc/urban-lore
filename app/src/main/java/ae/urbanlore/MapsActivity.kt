@@ -35,6 +35,8 @@ import java.util.*
 
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback, LocationListener, GoogleMap.OnMarkerClickListener{
 
+
+    private var locMarker :Marker? = null
     private lateinit var mMap: GoogleMap
     private lateinit var binding: ActivityMapsBinding
     private lateinit var fusedLocationClient: FusedLocationProviderClient
@@ -125,7 +127,10 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, LocationListener, 
 
             fusedLocationClient.lastLocation.addOnSuccessListener { location : Location? ->
                 if(location != null){
-                    mMap.addMarker(
+                    if(locMarker != null){
+                        locMarker?.remove()
+                    }
+                    locMarker = mMap.addMarker(
                         MarkerOptions()
                             .position(LatLng(location.latitude, location.longitude))
                             .title(
