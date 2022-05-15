@@ -6,6 +6,7 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.graphics.drawable.BitmapDrawable
 import android.location.Location
 import android.location.LocationListener
 import android.os.Bundle
@@ -14,6 +15,7 @@ import android.os.Looper
 import android.os.Message
 import android.util.Log
 import android.view.WindowManager
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import com.google.android.gms.location.FusedLocationProviderClient
@@ -23,14 +25,10 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.MapStyleOptions
-import com.google.android.gms.maps.model.Marker
-import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.gms.maps.model.*
 import com.google.android.material.snackbar.Snackbar
 import com.parse.ParseObject
 import com.parse.ParseQuery
-import java.lang.Exception
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
@@ -229,9 +227,15 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, LocationListener, 
 
         mMap.setOnMarkerClickListener { it ->
             it.snippet?.let { Log.d("CLICK", it) }
-            val intent = Intent(applicationContext,DetailsActivity::class.java)
-            intent.putExtra("ID", it.snippet)
-            startActivity(intent)
+            val result = distanceP(it)
+            if(result < 1000){
+                val intent = Intent(applicationContext,DetailsActivity::class.java)
+                intent.putExtra("ID", it.snippet)
+                startActivity(intent)
+            }
+            else{
+                Toast.makeText(application, "You are too far away from the marker!", Toast.LENGTH_SHORT).show()
+            }
             true
         }
         //val decoded = Base64.getDecoder().decode(memos[position].imgView)
@@ -242,6 +246,13 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, LocationListener, 
         mMap.addMarker(MarkerOptions().position(sydney).title("Marker in Sydney"))
         mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney))
     }
+    fun distanceP(it:Marker): Double{
+        val results = FloatArray(1)
+        Location.distanceBetween(locMarker?.position?.latitude!!.toDouble(), locMarker?.position?.longitude!!.toDouble(),
+            it.position.latitude, it.position.longitude, results);
+        return results[0].toDouble()
+    }
+
 
 
     fun getMarkerInfo(markerId:String):MutableMap<String,String>{
@@ -295,12 +306,29 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, LocationListener, 
                     val long: String? = obj?.getString("longitude")
                     val lat: String? = obj?.getString("latitude")
                     val title: String? = obj?.getString("name")
+                    val votes: Int? = obj?.getInt("upvoteNumber")
                     val markId: String? = obj?.objectId
 
-                    if (long!=null && lat != null){
+                    if (long!=null && lat != null && null != votes){
                         val sydney = LatLng(lat.toDouble(), long.toDouble())
                         val marker = mMap.addMarker(MarkerOptions().position(sydney).title(title))
                         marker?.snippet = markId
+                        val h = 100
+                        val w = 100
+
+                        if(votes >= 50){
+                            val icon:BitmapDescriptor = BitmapDescriptorFactory.fromResource(R.drawable.king)
+                            marker.setIcon(icon)
+                        }
+                        else if(votes >= 30){
+                            val icon:BitmapDescriptor = BitmapDescriptorFactory.fromResource(R.drawable.middle)
+                            marker.setIcon(icon)
+                        }
+                        else{
+                            val icon:BitmapDescriptor = BitmapDescriptorFactory.fromResource(R.drawable.bad)
+                            marker.setIcon(icon)
+                        }
+
                         Log.d("SNIPPET", markId.toString())
                         //dataList.add(element)
                     }
