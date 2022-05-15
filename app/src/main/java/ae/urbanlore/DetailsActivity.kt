@@ -6,6 +6,7 @@ import android.graphics.*
 import android.os.Bundle
 import android.util.Log
 import android.view.WindowManager
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.parse.ParseObject
 import com.parse.ParseQuery
@@ -40,9 +41,6 @@ class DetailsActivity : AppCompatActivity() {
             finish()
         }
         binding.ar.setOnClickListener {
-            /*val launchIntent =
-                applicationContext.packageManager.getLaunchIntentForPackage("com.google.ar.core.examples.kotlin.helloar.HelloArActivity")
-            */
             val launchIntent = Intent(Intent.ACTION_MAIN);
             launchIntent.setClassName("com.google.ar.core.examples.kotlin.helloar", "com.google.ar.core.examples.kotlin.helloar.HelloArActivity");
             if(launchIntent != null){
@@ -50,6 +48,7 @@ class DetailsActivity : AppCompatActivity() {
                 startActivity(launchIntent)
             }else{
                 Log.d("FAILLLLL", "BHGHJKSAHKSJFKAXGHKJL")
+                Toast.makeText(this, "AR app not found", Toast.LENGTH_SHORT)
             }
         }
 
