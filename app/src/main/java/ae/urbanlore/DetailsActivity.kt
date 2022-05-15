@@ -1,17 +1,16 @@
 package ae.urbanlore
 
 import ae.urbanlore.databinding.ActivityDetailsBinding
+import android.content.Intent
 import android.graphics.*
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.WindowManager
-import android.widget.Toast
-import androidx.core.graphics.drawable.toDrawable
+import androidx.appcompat.app.AppCompatActivity
 import com.parse.ParseObject
 import com.parse.ParseQuery
-import java.util.*
 import java.util.Base64.getDecoder
+
 
 class DetailsActivity : AppCompatActivity() {
     private lateinit var binding : ActivityDetailsBinding
@@ -39,6 +38,19 @@ class DetailsActivity : AppCompatActivity() {
 //        }
         binding.back.setOnClickListener{
             finish()
+        }
+        binding.ar.setOnClickListener {
+            /*val launchIntent =
+                applicationContext.packageManager.getLaunchIntentForPackage("com.google.ar.core.examples.kotlin.helloar.HelloArActivity")
+            */
+            val launchIntent = Intent(Intent.ACTION_MAIN);
+            launchIntent.setClassName("com.google.ar.core.examples.kotlin.helloar", "com.google.ar.core.examples.kotlin.helloar.HelloArActivity");
+            if(launchIntent != null){
+                Log.d("SUCCESS", "GHHKJHGJJGJHGJG")
+                startActivity(launchIntent)
+            }else{
+                Log.d("FAILLLLL", "BHGHJKSAHKSJFKAXGHKJL")
+            }
         }
 
     }
