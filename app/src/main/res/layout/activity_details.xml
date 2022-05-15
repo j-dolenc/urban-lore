@@ -7,56 +7,67 @@
     tools:context=".DetailsActivity">
 
     <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="200dp"
         android:id="@+id/image"
-        app:layout_constraintStart_toStartOf="parent"
+        android:layout_width="409dp"
+        android:layout_height="356dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginTop="50dp"/>
+        app:layout_constraintVertical_bias="0.03" />
 
     <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:id="@+id/title"
-        app:layout_constraintStart_toStartOf="parent"
+        app:flow_horizontalAlign="center"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/image"
-        android:layout_marginTop="30dp"/>
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/image" />
 
     <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
         android:id="@+id/description"
-        app:layout_constraintStart_toStartOf="parent"
+        android:layout_width="wrap_content"
+        app:flow_horizontalAlign="center"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/title"/>
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/upvote"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/downvote"
-        app:layout_constraintTop_toBottomOf="@id/description"
-        android:layout_marginTop="30dp"/>
+        app:layout_constraintTop_toBottomOf="@id/title"
+        app:layout_constraintVertical_bias="0.101" />
 
     <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:id="@+id/downvote"
-        app:layout_constraintStart_toEndOf="@id/upvote"
+        android:layout_width="120dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/description"
-        android:layout_marginTop="30dp"/>
+        app:layout_constraintStart_toEndOf="@id/upvote"
+        android:text="UPVOTE"
+        app:layout_constraintTop_toBottomOf="@id/description" />
 
     <Button
+        android:id="@+id/upvote"
+        android:layout_width="120dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        app:layout_constraintEnd_toStartOf="@id/downvote"
+        android:text="DOWNVOTE"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/description" />
+
+    <Button
+        android:id="@+id/back"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/back"
-        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="104dp"
+        android:text="BACK"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/description"
-        android:layout_marginTop="95dp"/>
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/description" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
