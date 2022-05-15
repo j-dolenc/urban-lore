@@ -259,12 +259,13 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, LocationListener, 
                     val long: String? = obj?.getString("longitude")
                     val lat: String? = obj?.getString("latitude")
                     val title: String? = obj?.getString("name")
-                    val markId: String? = obj?.getString("objectId")
+                    val markId: String? = obj?.objectId
 
                     if (long!=null && lat != null){
                         val sydney = LatLng(lat.toDouble(), long.toDouble())
-                        mMap.addMarker(MarkerOptions().position(sydney).title(title))?.snippet =
-                            markId
+                        val marker = mMap.addMarker(MarkerOptions().position(sydney).title(title))
+                        marker?.snippet = markId
+                        Log.d("SNIPPET", markId.toString())
                         //dataList.add(element)
                     }
                 }
