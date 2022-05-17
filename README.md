@@ -7,5 +7,5 @@ Check it out [HERE](https://urban-lore-eac97.firebaseapp.com/) :eyes:
 
 #### Link to AR github project [HERE](https://github.com/google-ar/arcore-android-sdk)
 
-#### Our app will soon be available for download :D.
+#### Our app is available to download on our website :D.
 
